@@ -121,12 +121,6 @@ Một cách để tạo *liên kết* là sử dụng `@Inject` ở hàm khởi 
 
 Lúc này, Hilt đã biết cách tạo một instance của lớp `AnalyticsAdapter`, ta có thể cung cấp các instance `AnalyticsAdapter` cho các lớp cần sử dụng nó.
 
-    @AndroidEntryPoint  
-    class  ExampleActivity  :  AppCompatActivity()  {
-    
-        @Inject lateinit var analytics:  AnalyticsAdapter  
-    }
-
 Tương tự, ta cũng cần xác định cách cung cấp instance của lớp `AnalyticsService`.
 
 ## Hilt modules
@@ -267,7 +261,7 @@ Tuy nhiên, Hilt cũng cho phép đưa các dependency vào một phạm vi cụ
 	    ):  AnalyticsService  
     }
 
-Ở ví dụ trên, ta khai báo `AnalyticsService` trong `ActivityScope`. Nghĩa là trong một activity chỉ sử dụng chung một instance của lớp AnalyticsService.
+Ở ví dụ trên, ta khai báo `AnalyticsService` trong `ActivityScope`. Nghĩa là trong một instance của một activity chỉ sử dụng chung một instance của lớp AnalyticsService.
 
 Một số phạm vi có thể sử dụng:
 <table>
@@ -307,11 +301,13 @@ Một số phạm vi có thể sử dụng:
         <td>@ServiceScoped</td>
     </tr>
 </table>
+</br>
 
 > **Lưu ý: ** Chú thích phạm vi chỉ có thể sử dụng trong InstallIn Component tương ứng.
 
 Ví dụ:    
 Đúng ✔️ 👇:
+
 
 		@Module  
 	    @InstallIn(ActivityComponent::class)  
@@ -323,6 +319,7 @@ Ví dụ:
 	    }
 
 Không đúng ❌ 👇:
+
 
 		@Module  
 	    @InstallIn(SingletonComponent::class)
@@ -337,7 +334,7 @@ Không đúng ❌ 👇:
 
 Hilt hỗ trợ cho các lớp phổ biến nhất trên Android. Tuy nhiên, ta có thể cần chèn trường trong các lớp mà Hilt không hỗ trợ bằng cách chú thích với `@EntryPoint`.
 
-Chẳng hạn như Hilt không trực tiếp hỗ trợ content provider. Nếu muốn content provider sử dụng Hilt để lấy ra một số dependency, ta cần tạo một interface được chú thích với `@EntryPoint` với các loại dependency tương ứng cần cung cấp.
+Chẳng hạn như Hilt không trực tiếp hỗ trợ content provider. Nếu muốn dùng Hilt để lấy ra một số dependency cho content provider sử dụng, ta cần tạo một interface được chú thích với `@EntryPoint` với các loại dependency tương ứng cần cung cấp.
 Chú thích thêm `@InstallIn` để xác định lớp được sử dụng ở thành phần Android nào.
 
     class  ExampleContentProvider : ContentProvider()  {
@@ -353,6 +350,12 @@ Chú thích thêm `@InstallIn` để xác định lớp được sử dụng ở
 
     class  ExampleContentProvider:  ContentProvider()  {
     
+	    @EntryPoint  
+	    @InstallIn(SingletonComponent::class)  
+	    interface  ExampleContentProviderEntryPoint  {  
+		    fun analyticsService():  AnalyticsService  
+	    } 
+	    
 	    override  fun query():  Cursor  {  
 		    val hiltEntryPoint =  EntryPointAccessors
 			    .fromApplication(applicationContext,  ExampleContentProviderEntryPoint::class.java)  
