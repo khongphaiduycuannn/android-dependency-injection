@@ -121,11 +121,11 @@ Một cách để tạo *liên kết* là sử dụng `@Inject` ở hàm khởi 
 
 Lúc này, Hilt đã biết cách tạo một instance của lớp `AnalyticsAdapter`, ta có thể cung cấp các instance `AnalyticsAdapter` cho các lớp cần sử dụng nó.
 
-@AndroidEntryPoint  
-class  ExampleActivity  :  AppCompatActivity()  {
-
-	@Inject lateinit var analytics:  AnalyticsAdapter  
-}
+    @AndroidEntryPoint  
+    class  ExampleActivity  :  AppCompatActivity()  {
+    
+        @Inject lateinit var analytics:  AnalyticsAdapter  
+    }
 
 Tương tự, ta cũng cần xác định cách cung cấp instance của lớp `AnalyticsService`.
 
